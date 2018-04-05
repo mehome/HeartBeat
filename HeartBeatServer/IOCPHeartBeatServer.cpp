@@ -184,6 +184,8 @@ DWORD WINAPI IOCPHeartBeatServer::_WorkerThread(LPVOID lpParam)
 	// 循环处理请求，知道接收到Shutdown信息为止
 	while (WAIT_OBJECT_0 != WaitForSingleObject(pIOCPServer->m_hShutdownEvent, 0))
 	{
+		// INFINITE 设置超时时间，如果一定时间没有收到完成端口的完成消息。
+		// 服务器端的心跳处理可以在这里考虑，如果超时，可以清理有的客户端。但是还是不能针对单个客户端进行心跳超时检测
 		BOOL bReturn = GetQueuedCompletionStatus(
 			pIOCPServer->m_hIOCompletionPort,
 			&dwBytesTransfered,
